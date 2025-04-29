@@ -2,6 +2,7 @@
 🔎 Problem Statement
 We have a serverless architecture in Azure where one of our services stores billing records in Azure Cosmos DB. Over time, the data volume has significantly increased, leading to escalating operational costs. Although the system is read-heavy, records older than three months are rarely accessed. These older records still need to be served with acceptable latency.
 
+
 ✅ Current Constraints
 Record Size: Up to 300 KB per billing record
 Total Records: Over 2 million
@@ -15,10 +16,12 @@ Implementation Requirements:
 💡 Core Idea
 Implement a hot-cold tiered storage model by segregating recent (active) and historical (archived) data.
 
+
 Tier	Storage Type	Description
 Hot Tier	Azure Cosmos DB	Holds records from the last 90 days
 Cold Tier	Azure Blob Storage	Stores records older than 90 days (as JSON)
 An Azure Timer Trigger Function handles daily archival. A read abstraction layer (via Azure Function or APIM policy) seamlessly retrieves data from either Cosmos DB or Blob Storage.
+
 
 ⚙️ Technical Components
 1. Archival Function (Timer Trigger)
@@ -78,11 +81,15 @@ def try_blob_storage(record_id):
         blob_data = blob_client.download_blob().readall()
         return json.loads(blob_data)
     return None
+
+    
 📈 Benefits
 💰 Reduced storage cost by offloading infrequently accessed records to Blob Storage
 🔁 No impact on existing APIs or user experience
 ⚙️ Seamless, automated archival and retrieval
 ☁️ Scalable, serverless architecture
+
+
 🗂 Project Structure
 /
 ├── archive_old_records/        # Timer Function to archive old billing data
@@ -90,6 +97,8 @@ def try_blob_storage(record_id):
 ├── requirements.txt            # Python dependencies
 ├── README.md                   # Deployment guide
 └── Assignment.md               # Documentation (this file)
+
+
 📝 Additional Notes
 The archival process is idempotent — ensures no duplication or premature deletion
 Azure Blob Storage supports cool/archive tiers and lifecycle management policies for additional cost savings
