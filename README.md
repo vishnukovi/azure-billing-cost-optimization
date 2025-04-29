@@ -15,5 +15,4 @@ This solution archives billing records older than 3 months from Cosmos DB to Azu
 1. A timer-triggered Azure Function runs daily to move old records to Blob.
 2. Retrieval logic first checks Cosmos DB, then falls back to Blob if needed.
 
-# Architecture Diagram
-Image is attached
+
