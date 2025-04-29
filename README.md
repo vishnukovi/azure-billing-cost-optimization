@@ -16,41 +16,4 @@ This solution archives billing records older than 3 months from Cosmos DB to Azu
 2. Retrieval logic first checks Cosmos DB, then falls back to Blob if needed.
 
 # Architecture Diagram
-┌───────────────────────────────────────────────────────────── ┐
-│                    Data Retrieval Flow                       │
-│                                                              │
-│  ┌─────────────┐    ┌──────────────────┐    ┌─────────────┐  │
-│  │             │    │                  │    │             │  │
-│  │ HTTP Client │───▶│ HTTP Trigger     │───▶│ Shared     │  │
-│  │             │    │ Azure Function   │    │ Utilities   │  │
-│  └─────────────┘    └──────────────────┘    └──────┬──────┘  │
-│                                                    │         │
-│                                                    ▼         │
-│                                         ┌──────────────────┐ │
-│                                         │   Cosmos DB      │ │
-│                                         │ (Recent Data)    │ │
-│                                         └──────────────────┘ │
-│                                                    │         │
-│                                                    ▼         │
-│                                         ┌──────────────────┐ │
-│                                         │   Blob Storage   │ │
-│                                         │ (Archived Data)  │ │
-│                                         └──────────────────┘ │
-│                                                              │
-└──────────────────────────────────────────────────────────── ─┘
-
-┌───────────────────────────────────────────────────────────── ┐
-│                    Data Archival Flow                        │
-│                                                              │
-│  ┌──────────────────┐    ┌──────────────────┐    ┌────────┐  │
-│  │ Timer Trigger    │───▶│ Shared Utilities │───▶│ Cosmos│  │
-│  │ Azure Function   │    │                  │    │ DB     │  │
-│  └──────────────────┘    └──────────────────┘    └───┬────┘  │
-│                                                      │       │
-│                                                      ▼       │
-│                                               ┌──────────┐   │
-│                                               │ Blob     │   │
-│                                               │ Storage  │   │
-│                                               └──────────┘   │
-│                                                              │
-└──────────────────────────────────────────────────────────── ─┘
+Image is attached
